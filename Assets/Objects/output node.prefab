@@ -332,6 +332,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d544f78b7408b479c3005529b6ba58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputWCs: []
+  outputWCs:
+  - {fileID: 1388159804958806712}
+  inputStates: 
+  Label: A
+  labelTMP: {fileID: 7541567513203940222}
   onOrOff: 0
   onSprite: {fileID: 21300000, guid: 24becf51bcb442a4cbf9fa821ccea105, type: 3}
 --- !u!61 &7972151225421433866
@@ -430,3 +436,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5298042741014834682, guid: 41e8e02c143a241439664f652dd0ecf5, type: 3}
   m_PrefabInstance: {fileID: 2259711388781768109}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1388159804958806712 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 873593281352990485, guid: 41e8e02c143a241439664f652dd0ecf5, type: 3}
+  m_PrefabInstance: {fileID: 2259711388781768109}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3ec5f163019d554a94c1ef7bd357a94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -13,10 +13,14 @@ public class lightbulb : GATEbase
         offSprite = GetComponent<SpriteRenderer>().sprite;
     }
 
-    public override bool ApplyInputs(List<bool> inputs)
+    public override void RunNode()
+    {
+        outputStates = ApplyInputs(inputStates);  //RUNS THE NODES FUNCTION.  I.E. FOR THE AND NODE, CHECKS ITS TWO INPUTS AND MAKES A BOOL[] HOLDING A SINGLE BOOL OUTPUT
+    }
+    public override List<bool> ApplyInputs(List<bool> inputs)
     {
         if (inputs[0]) GetComponent<SpriteRenderer>().sprite = onSprite;
         else GetComponent<SpriteRenderer>().sprite = offSprite;
-        return false;
+        return null;
     }
 }

@@ -13,6 +13,9 @@ using static FrontMan;
 public class FrontMan : MonoBehaviour
 {
     public static FrontMan FM;
+    public Vector3 oldMousePos = Vector3.zero;
+    public Vector3 newMousePos = Vector3.zero;
+    public Vector3 mousePosDelta = Vector3.zero;
 
     private void Awake()
     {
@@ -22,6 +25,23 @@ public class FrontMan : MonoBehaviour
 
     private void Update()
     {
+        //gets mouse movement for moving gates
+        newMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosDelta = newMousePos - oldMousePos;
+        oldMousePos = newMousePos;
+
+
+
+
+
+
+
+
+
+
+
+
+
         //THIS CONTROLLS WHEN THE PLAYER SELECTS A WIRE CONNECTOR, AND IS RESPONSIBLE FOR WIRE CONNECTING BEHAVIOUR
         if (WireConnector.connectingWire)
         {
@@ -31,8 +51,38 @@ public class FrontMan : MonoBehaviour
             //MIDDLE MOUSE CONTROLLS ADDING A NEW NODE FOR MANAGEMENT PURPOSES
             if (Input.GetMouseButtonDown(2))
             {
-                wire.positionCount = wire.positionCount + 1;  //adds new segment
-                wire.SetPosition(wire.positionCount - 2, Camera.main.ScreenToWorldPoint(Input.mousePosition).Change(0, 0, 10));  //places new segment at mouse position
+                int newPositionCount = wire.positionCount+1;
+                Vector3[] newPositions = new Vector3[newPositionCount];
+                for (int i = 0; i < wire.positionCount; i++)
+                {
+                    newPositions[i] = wire.GetPosition(i);
+                }
+                newPositions[newPositions.Length - 1] = Camera.main.ScreenToWorldPoint(Input.mousePosition).Change(0, 0, 10);
+                wire.positionCount++;
+                wire.SetPositions(newPositions);
+            }
+
+            //right click removes a segment if there is one, if not, deletes the wire
+            if (Input.GetMouseButtonDown(1))
+            {
+                if(wire.positionCount > 2)
+                {
+                    int newPositionCount = wire.positionCount - 1;
+                    Vector3[] newPositions = new Vector3[newPositionCount];
+                    for (int i = 0; i < newPositionCount; i++)
+                    {
+                        newPositions[i] = wire.GetPosition(i);
+                    }
+                    newPositions[newPositions.Length - 1] = wire.GetPosition(wire.positionCount - 1);
+                    //newPositions[0] = wire.GetPosition(0);
+                    wire.SetPositions(newPositions);
+                    wire.positionCount--;
+                }
+                else
+                {
+                    Destroy(wire.gameObject);
+                    WireConnector.connectingWire = false;
+                }
             }
         }
     }

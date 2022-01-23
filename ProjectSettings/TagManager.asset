@@ -47,6 +47,9 @@ TagManager:
   - name: Wire Connector
     uniqueID: 459084139
     locked: 0
+  - name: electrical wire
+    uniqueID: 2503333041
+    locked: 0
   - name: Wire
     uniqueID: 2900759185
     locked: 0
