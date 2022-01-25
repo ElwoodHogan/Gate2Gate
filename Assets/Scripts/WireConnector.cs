@@ -17,7 +17,6 @@ public class WireConnector : MonoBehaviour
 
     public bool inputOrOutput;
     public bool onOrOff;
-    public Sprite highlightedMode;
     public LineRenderer WirePrefab;
     public List<LineRenderer> connectedWires;
     public static bool connectingWire = false;
@@ -27,7 +26,10 @@ public class WireConnector : MonoBehaviour
     private Sprite unHighlightedMode;
     private SpriteRenderer SR;
     public List<WireConnector> connections;
-    
+
+    public Sprite highlightedMode;
+    public Sprite inputSprite;
+    public Sprite inputHighlightedMode;
 
     private void Awake()
     {
@@ -37,7 +39,14 @@ public class WireConnector : MonoBehaviour
 
     private void OnMouseOver()
     {
+        //change sprite for highlighting
         SR.sprite = highlightedMode;
+
+        //IF RIGHT CLICK, DESTROY CONNECTIONS
+        if (Input.GetMouseButtonDown(1))
+        {
+            RemoveConnections();
+        }
     }
 
     private void OnMouseExit()
@@ -66,8 +75,10 @@ public class WireConnector : MonoBehaviour
             currentWire.transform.GetChild(0).GetComponent<LineRenderer>().positionCount = wirePositions.Length;
             currentWire.transform.GetChild(0).GetComponent<LineRenderer>().SetPositions(wirePositions);
 
+            //catagorizes input and output connections, for easier reading of code
             WireConnector inputWC;
             WireConnector outputWC;
+
             //CONNECTS THE OUTPUT OF ONE GATE TO THE INPUT OF THE CONNECTED GATE
             if (inputOrOutput)  //input and output nodes defined for organizational purposes
             {
@@ -80,7 +91,7 @@ public class WireConnector : MonoBehaviour
             }
             //gets the gate connected to the outputWC the wire is connected to, and based on the index out the outputWC,
             //adds a function that calls the setinput of the inputWC, which takes in the state of the output and puts it into the inputWC-indexed input
-            outputWC.connectedGate.OutgoingSignals[outputWC.index].Add((bool state) => inputWC.connectedGate.SetInput(inputWC.index, state));
+            outputWC.connectedGate.OutgoingSignals[outputWC.index].Add(currentWire, (bool state) => inputWC.connectedGate.SetInput(inputWC.index, state));
             outputWC.connectedGate.RunNode();
 
             outputWC.connectedWires.Add(currentWire);
@@ -100,11 +111,62 @@ public class WireConnector : MonoBehaviour
 
     public void SetElectricWires(bool state)
     {
-        print("wire altered " + state);
-        foreach(LineRenderer wire in connectedWires)
+        //print("wire altered " + state);
+        try
         {
-            wire.transform.GetChild(0).gameObject.SetActive(state);
+            foreach (LineRenderer wire in connectedWires)
+            {
+                wire.transform.GetChild(0).gameObject.SetActive(state);
+            }
         }
+        catch (Exception)
+        {
+            print("error in: " + gameObject.name);
+            print(connectedGate.gameObject.name);
+        }
+        
     }
 
+    public void RemoveConnections()
+    {
+        List<WireConnector> connectedWCs = new List<WireConnector>(connections);  //storing a list of connections so that they can run their nodes.
+
+        //if this is the input WC, we only need to remove one connection
+        if (inputOrOutput)
+        {
+            connections[0].connectedWires.Remove(connectedWires[0]);
+            connections[0].connectedGate.OutgoingSignals[connections[0].index].Remove(connectedWires[0]);
+            connectedGate.SetInput(index, false);
+        }
+        else //otherwise, iterate through the list of connections
+        {
+            foreach (WireConnector wc in connections)
+            {
+                wc.connections.Remove(this);
+                foreach (LineRenderer wire in connectedWires)
+                {
+                    wc.connectedWires.Remove(wire);
+                    connectedGate.OutgoingSignals[index].Remove(wire);
+                }
+            }
+        }
+
+        //physically destroying the wires
+        foreach (LineRenderer wire in connectedWires)
+        {
+            Destroy(wire.gameObject);
+        }
+
+        //resetting list
+        connections = new List<WireConnector>();
+        connectedWires = new List<LineRenderer>();
+
+        //running the nodes again incase of changes states
+        if (!inputOrOutput) foreach (var wc in connectedWCs)
+            {
+                wc.connectedGate.SetInput(wc.index, false);
+                wc.connectedGate.RunNode();
+            }
+        else connectedGate.RunNode();
+    }
 }

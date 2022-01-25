@@ -12,18 +12,23 @@ using static FrontMan;
 
 public abstract class GATEbase : SerializedMonoBehaviour
 {
+    public bool indestructable = false;
+
     public List<WireConnector> inputWCs;  //ORDER MATTERS!
     public List<WireConnector> outputWCs;
 
-    public Dictionary<int, List<Action<bool>>> OutgoingSignals = new Dictionary<int, List<Action<bool>>>();  //THE BASE LIST IS THE INDEX OF THE OUTPUTS, THE INTERIOR LIST IS THE LIST OUT INPUTS BEING SENT SIGNALS FROM THIS OUTPUT
+    public Dictionary<int, Dictionary<LineRenderer, Action<bool>>> OutgoingSignals = new Dictionary<int, Dictionary<LineRenderer, Action<bool>>>();  //THE BASE LIST IS THE INDEX OF THE OUTPUTS, THE INTERIOR LIST IS THE LIST OUT INPUTS BEING SENT SIGNALS FROM THIS OUTPUT
     //List<Action<bool>> incomingSignals;
 
     public List<bool> inputStates = new List<bool>();
     public List<bool> outputStates = new List<bool>();
 
+    public abstract string Name { get; set; }
+
     private void Start()
     {
-        if(inputWCs.Count > 0)
+        OutgoingSignals = new Dictionary<int, Dictionary<LineRenderer, Action<bool>>>();
+        if (inputWCs.Count > 0)
         {
             for (int i = 0; i < inputWCs.Count; i++)
             {
@@ -40,7 +45,7 @@ public abstract class GATEbase : SerializedMonoBehaviour
                 outputWCs[i].inputOrOutput = false;
                 outputWCs[i].index = i;
                 outputWCs[i].connectedGate = this;
-                OutgoingSignals.Add(i, new List<Action<bool>>());
+                OutgoingSignals.Add(i, new Dictionary<LineRenderer, Action<bool>>());
                 outputStates.Add(false);
             }
         }
@@ -70,15 +75,11 @@ public abstract class GATEbase : SerializedMonoBehaviour
         if (outputStates.Count > 0)
         {
             for (int i = 0; i < outputStates.Count; i++)
-                foreach (Action<bool> outputs in OutgoingSignals[i])
-                    outputs.Invoke(outputStates[i]);
+                foreach (KeyValuePair<LineRenderer, Action<bool>> outputs in OutgoingSignals[i])
+                    outputs.Value.Invoke(outputStates[i]);
         }
     }
     public abstract List<bool> ApplyInputs(List<bool> inputs);  //Runs the gate based on the list of inputs
-
-    private void Update()
-    {
-    }
 
     private void OnMouseDrag()
     {
@@ -108,6 +109,23 @@ public abstract class GATEbase : SerializedMonoBehaviour
                 wire.SetPosition(index, wc.transform.position + FM.mousePosDelta);
                 wire.transform.GetChild(0).GetComponent<LineRenderer>().SetPosition(index, (wc.transform.position + FM.mousePosDelta).Change(0,0,-1));
             }
+        }
+    }
+
+    private void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (indestructable) return;
+            foreach(WireConnector wc in inputWCs)
+            {
+                wc.RemoveConnections();
+            }
+            foreach (WireConnector wc in outputWCs)
+            {
+                wc.RemoveConnections();
+            }
+            Destroy(gameObject);
         }
     }
 }

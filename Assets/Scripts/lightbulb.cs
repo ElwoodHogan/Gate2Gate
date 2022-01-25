@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class lightbulb : GATEbase
 {
+    public override string Name { get; set; } = "LIGHTBULB";
+
     public bool onOrOff;
     private Sprite offSprite;
     public Sprite onSprite;

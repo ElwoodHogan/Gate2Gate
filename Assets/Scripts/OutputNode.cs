@@ -6,6 +6,8 @@ using TMPro;
 
 public class OutputNode : GATEbase
 {
+    public override string Name { get; set; } = "OUTPUT";
+
     public string Label;
     public TextMeshProUGUI labelTMP;
 
@@ -24,8 +26,8 @@ public class OutputNode : GATEbase
         else GetComponent<SpriteRenderer>().sprite = offSprite;
 
         //custom output function for this output node, which for right now is the only gate with no input
-        foreach (Action<bool> outputs in OutgoingSignals[0])
-            outputs.Invoke(outputStates[0]);
+        foreach (KeyValuePair<LineRenderer, Action<bool>> outputs in OutgoingSignals[0])
+            outputs.Value.Invoke(outputStates[0]);
 
         for (int i = 0; i < outputStates.Count; i++)
         {
