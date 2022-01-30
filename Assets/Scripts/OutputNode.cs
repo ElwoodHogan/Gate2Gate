@@ -21,7 +21,29 @@ public class OutputNode : GATEbase
     }
     private void OnMouseDown()
     {
+        Toggle();
+    }
+
+    public void Toggle()
+    {
         outputStates[0] = !outputStates[0];
+        if (outputStates[0]) GetComponent<SpriteRenderer>().sprite = onSprite;
+        else GetComponent<SpriteRenderer>().sprite = offSprite;
+
+        //custom output function for this output node, which for right now is the only gate with no input
+        foreach (KeyValuePair<LineRenderer, Action<bool>> outputs in OutgoingSignals[0])
+            outputs.Value.Invoke(outputStates[0]);
+
+        for (int i = 0; i < outputStates.Count; i++)
+        {
+            outputWCs[i].onOrOff = outputStates[i];
+            outputWCs[i].SetElectricWires(outputStates[i]);
+        }
+    }
+
+    public void Set(bool setState)
+    {
+        outputStates[0] = setState;
         if (outputStates[0]) GetComponent<SpriteRenderer>().sprite = onSprite;
         else GetComponent<SpriteRenderer>().sprite = offSprite;
 

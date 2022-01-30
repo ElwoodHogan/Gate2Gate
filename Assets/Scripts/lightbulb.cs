@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class lightbulb : GATEbase
 {
@@ -9,6 +10,8 @@ public class lightbulb : GATEbase
     public bool onOrOff;
     private Sprite offSprite;
     public Sprite onSprite;
+
+    public TextMeshPro labelTMP;
 
     private void Awake()
     {
@@ -23,6 +26,7 @@ public class lightbulb : GATEbase
     {
         if (inputs[0]) GetComponent<SpriteRenderer>().sprite = onSprite;
         else GetComponent<SpriteRenderer>().sprite = offSprite;
+        onOrOff = inputs[0];
         return null;
     }
 }

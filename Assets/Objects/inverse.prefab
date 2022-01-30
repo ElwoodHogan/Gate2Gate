@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 624075351155523515}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.879, y: -2.772, z: 0}
-  m_LocalScale: {x: 0.60399, y: 0.60399, z: 0.60399}
+  m_LocalScale: {x: 0.47776216, y: 0.47776216, z: 0.47776216}
   m_Children:
   - {fileID: 1898394902719077597}
   - {fileID: 6707530175133737754}
@@ -108,25 +108,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes:
     - Name: OutgoingSignals
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Collections.Generic.List`1[[System.Action`1[[System.Boolean,
-        mscorlib]], mscorlib]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
+      Entry: 6
       Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+  indestructable: 0
   inputWCs:
   - {fileID: 6900000216419356210}
   outputWCs:

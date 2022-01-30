@@ -12,10 +12,19 @@ using static FrontMan;
 
 public class FrontMan : MonoBehaviour
 {
+    /*
+     * audio credits:
+     * music by FoxSynergy
+     * shears: AntumDeluge
+     * click: dawith
+     **/
+
     public static FrontMan FM;
     public Vector3 oldMousePos = Vector3.zero;
     public Vector3 newMousePos = Vector3.zero;
     public Vector3 mousePosDelta = Vector3.zero;
+
+    public AudioSource thud;
 
     private void Awake()
     {

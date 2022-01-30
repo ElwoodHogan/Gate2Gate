@@ -31,6 +31,9 @@ public class WireConnector : MonoBehaviour
     public Sprite inputSprite;
     public Sprite inputHighlightedMode;
 
+    [SerializeField] AudioSource click;
+    [SerializeField] AudioSource snip;
+
     private void Awake()
     {
         SR = GetComponent<SpriteRenderer>();
@@ -58,6 +61,7 @@ public class WireConnector : MonoBehaviour
     {
         if (connectingWire)
         {
+
             if (connections.Count > 0 && inputOrOutput) return;  //input nodes can only have one connection
             if (startWC.inputOrOutput == inputOrOutput) return;  //inputs can not connect to inputs and outputs can not connect to outputs
             connectingWire = false;
@@ -97,6 +101,9 @@ public class WireConnector : MonoBehaviour
             outputWC.connectedWires.Add(currentWire);
             inputWC.connectedWires.Add(currentWire);  //inputs need to keep track of wires for the purpose of moving the wire when moving the gate
             outputWC.SetElectricWires(outputWC.connectedGate.outputStates[outputWC.index]);  //Turns the electrical wires on or off depending on the current output
+
+
+            click.Play();  //play click sound
         }
         else
         {
@@ -134,9 +141,12 @@ public class WireConnector : MonoBehaviour
         //if this is the input WC, we only need to remove one connection
         if (inputOrOutput)
         {
-            connections[0].connectedWires.Remove(connectedWires[0]);
-            connections[0].connectedGate.OutgoingSignals[connections[0].index].Remove(connectedWires[0]);
-            connectedGate.SetInput(index, false);
+            if(connections.Count > 0)
+            {
+                connections[0].connectedWires.Remove(connectedWires[0]);
+                connections[0].connectedGate.OutgoingSignals[connections[0].index].Remove(connectedWires[0]);
+                connectedGate.SetInput(index, false);
+            }
         }
         else //otherwise, iterate through the list of connections
         {
@@ -168,5 +178,7 @@ public class WireConnector : MonoBehaviour
                 wc.connectedGate.RunNode();
             }
         else connectedGate.RunNode();
+
+        snip.Play();
     }
 }
