@@ -156,6 +156,7 @@ GameObject:
   - component: {fileID: 6321011855656313698}
   - component: {fileID: 4627594446902016953}
   - component: {fileID: 3924481459490823367}
+  - component: {fileID: 6459651507595998985}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -315,6 +316,17 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+--- !u!210 &6459651507595998985
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9001327196953686366}
+  m_Enabled: 1
+  m_SortingLayerID: -1394208111
+  m_SortingLayer: 4
+  m_SortingOrder: 0
 --- !u!1001 &1427921355327049000
 PrefabInstance:
   m_ObjectHideFlags: 0

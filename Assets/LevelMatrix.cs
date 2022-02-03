@@ -23,7 +23,7 @@ public class LevelMatrix : MonoBehaviour
             lmci.transform.SetAsFirstSibling();
             TextMeshProUGUI text = lmci.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             if (i < (matrix.GetLength(0) - outputs))  text.text = GetColumnName(i);
-            else text.text = GetColumnNameReverse(i-(outputs));
+            else text.text = GetColumnNameReverse(i-outputs-1);
         }
 
         //labels the last to columns, as they are what shows the player weather they have succeeded or not

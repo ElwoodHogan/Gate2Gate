@@ -104,6 +104,8 @@ public class WireConnector : MonoBehaviour
 
 
             click.Play();  //play click sound
+
+            MainMeniAI.MM.CreateCopyOfLevel();
         }
         else
         {

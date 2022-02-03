@@ -19,9 +19,17 @@ public class MainMeniAI : MonoBehaviour
 
     public static MainMeniAI MM;
 
+    public Transform LevelParent;
+
     private void Awake()
     {
         MM = this;
+    }
+
+    private void Update()
+    {
+        //undo button, impliment in future
+        //if (Input.GetKeyDown(KeyCode.Z)) RevertLevel();
     }
     public void SelectMenu(int index)
     {
@@ -36,18 +44,20 @@ public class MainMeniAI : MonoBehaviour
     public void SelectLevel(int index)
     {
         if (currentLevel) currentLevel.gameObject.SetActive(false);
-        currentLevel = Instantiate(Levels[index - 1]);
+        currentLevel = Instantiate(Levels[index - 1], LevelParent);
         currentLevel.gameObject.SetActive(true);
 
         //moves the toolbar in and the menus out
         Toolbar.DOMove(ToolbarOnScreenPos.position, 1);
         currentMenu.DOMove(outside.position, 1);
         transform.DOMove(transform.position.Change(-1920 / 2, 0, 0), 1);
+
+        CreateCopyOfLevel();
     }
 
     public void ExitLevel()
     {
-        Destroy(currentLevel.gameObject);
+        foreach (Transform child in LevelParent) Destroy(child.gameObject);
         Toolbar.DOMove(ToolbarOffScreenPos.position, .8f);
         currentMenu.DOMove(middleOfScreen.position, 1f);
         transform.DOMove(middleOfScreen.position, 1f);
@@ -56,5 +66,22 @@ public class MainMeniAI : MonoBehaviour
     public void  Exit()
     {
         Application.Quit();
+    }
+
+    public void CreateCopyOfLevel()
+    {
+       LevelAI newLevel = Instantiate(currentLevel, LevelParent);
+        newLevel.gameObject.SetActive(false);
+        currentLevel.transform.SetAsLastSibling();
+    }
+
+    public void RevertLevel()
+    {
+        if (LevelParent.childCount <= 2) return;
+        DestroyImmediate(currentLevel.gameObject);
+        DestroyImmediate(LevelParent.GetChild(LevelParent.childCount - 1).gameObject);
+        Transform newCopy = Instantiate(LevelParent.GetChild(LevelParent.childCount - 1), LevelParent);
+        LevelParent.GetChild(LevelParent.childCount - 1).gameObject.SetActive(true);
+        currentLevel = LevelParent.GetChild(LevelParent.childCount - 1).GetComponent<LevelAI>();
     }
 }

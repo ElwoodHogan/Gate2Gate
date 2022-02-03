@@ -17,6 +17,7 @@ public class FrontMan : MonoBehaviour
      * music by FoxSynergy
      * shears: AntumDeluge
      * click: dawith
+     * thud: spookymodem
      **/
 
     public static FrontMan FM;
@@ -25,6 +26,8 @@ public class FrontMan : MonoBehaviour
     public Vector3 mousePosDelta = Vector3.zero;
 
     public AudioSource thud;
+
+    public GameObject confetti;
 
     private void Awake()
     {
@@ -57,18 +60,25 @@ public class FrontMan : MonoBehaviour
             LineRenderer wire = WireConnector.currentWire;
             wire.SetPosition(wire.positionCount - 1, Camera.main.ScreenToWorldPoint(Input.mousePosition).Change(0,0,10));  //moves the last line segment to the mouse
 
-            //MIDDLE MOUSE CONTROLLS ADDING A NEW NODE FOR MANAGEMENT PURPOSES
-            if (Input.GetMouseButtonDown(2))
+            //left MOUSE CONTROLLS ADDING A NEW NODE FOR MANAGEMENT PURPOSES
+            if (Input.GetMouseButtonDown(0))
             {
-                int newPositionCount = wire.positionCount+1;
-                Vector3[] newPositions = new Vector3[newPositionCount];
-                for (int i = 0; i < wire.positionCount; i++)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D[] hit = Physics2D.GetRayIntersectionAll(ray, 100f);
+                if(!(hit.Any(hit => hit.transform.GetComponent<WireConnector>() != null)))  //checks to make sure the player is not clicking on a wire connector
                 {
-                    newPositions[i] = wire.GetPosition(i);
+                    int newPositionCount = wire.positionCount + 1;
+                    Vector3[] newPositions = new Vector3[newPositionCount];
+                    for (int i = 0; i < wire.positionCount; i++)
+                    {
+                        newPositions[i] = wire.GetPosition(i);
+                    }
+                    newPositions[newPositions.Length - 1] = Camera.main.ScreenToWorldPoint(Input.mousePosition).Change(0, 0, 10);
+                    wire.positionCount++;
+                    wire.SetPositions(newPositions);
                 }
-                newPositions[newPositions.Length - 1] = Camera.main.ScreenToWorldPoint(Input.mousePosition).Change(0, 0, 10);
-                wire.positionCount++;
-                wire.SetPositions(newPositions);
+
+                
             }
 
             //right click removes a segment if there is one, if not, deletes the wire

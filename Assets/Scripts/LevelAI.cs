@@ -102,6 +102,9 @@ public class LevelAI : SerializedMonoBehaviour
         {
             //print("player beat the level");
             ToolbarAI.toolbar.AddNextGate(levelIndex);
+            GameObject conf = Instantiate(FrontMan.FM.confetti, transform);
+            conf.transform.position = Camera.main.transform.position.Change(0, 0, 20);
+            conf.SetActive(true);
         }
     }
 
